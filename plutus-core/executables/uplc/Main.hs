@@ -2,31 +2,44 @@
 {-# LANGUAGE ExistentialQuantification #-}
 {-# LANGUAGE OverloadedStrings         #-}
 {-# LANGUAGE TypeApplications          #-}
+{-# LANGUAGE ImplicitParams          #-}
+{-# LANGUAGE LambdaCase          #-}
 
 module Main (main) where
 
+import Annotation
 import PlutusCore qualified as PLC
 import PlutusCore.Evaluation.Machine.ExBudget (ExBudget (..), ExRestrictingBudget (..))
 import PlutusCore.Evaluation.Machine.ExBudgetingDefaults qualified as PLC
 import PlutusCore.Evaluation.Machine.ExMemory (ExCPU (..), ExMemory (..))
+import UntypedPlutusCore.Evaluation.Machine.Cek.Internal (defaultSlippage)
+import PlutusCore.Evaluation.Machine.MachineParameters
 import PlutusCore.Executable.Common
 import PlutusCore.Executable.Parsers
 
 import Data.Foldable
-import Data.Functor (void)
 import Data.List (nub)
 import Data.List.Split (splitOn)
 import Data.Text qualified as T
+import PlutusPrelude
 
 import UntypedPlutusCore qualified as UPLC
+import UntypedPlutusCore.DeBruijn
 import UntypedPlutusCore.Evaluation.Machine.Cek qualified as Cek
 
-import Control.DeepSeq (NFData, rnf)
-import Control.Lens
+import Control.DeepSeq (rnf)
 import Options.Applicative
 import System.Exit (exitFailure)
 import System.IO (hPrint, stderr)
 import Text.Read (readMaybe)
+import Control.Monad.Except
+
+import UntypedPlutusCore.Evaluation.Machine.Cek.Debug.Driver qualified as D
+import UntypedPlutusCore.Evaluation.Machine.Cek.Debug.Internal qualified as D
+import Data.Ix
+import System.Console.Haskeline qualified as Repl
+import Control.Monad.ST (RealWorld)
+import Data.Maybe
 
 uplcHelpText :: String
 uplcHelpText = helpText "Untyped Plutus Core"
@@ -44,6 +57,9 @@ data SomeBudgetMode =
 data EvalOptions =
     EvalOptions Input Format PrintMode BudgetMode TraceMode Output TimingMode CekModel
 
+data DbgOptions =
+    DbgOptions Input Format PrintMode BudgetMode TraceMode CekModel
+
 ---------------- Main commands -----------------
 
 data Command = Apply     ApplyOptions
@@ -51,6 +67,7 @@ data Command = Apply     ApplyOptions
              | Print     PrintOptions
              | Example   ExampleOptions
              | Eval      EvalOptions
+             | Dbg     DbgOptions
              | DumpModel
              | PrintBuiltinSignatures
 
@@ -69,6 +86,13 @@ evalOpts =
   EvalOptions <$>
     input <*> inputformat <*>
         printmode <*> budgetmode <*> tracemode <*> output <*> timingmode <*> cekmodel
+
+dbgOpts :: Parser DbgOptions
+dbgOpts =
+  DbgOptions <$>
+    input <*> inputformat <*>
+        printmode <*> budgetmode <*> tracemode <*> cekmodel
+
 
 -- Reader for budget.  The --restricting option requires two integer arguments
 -- and the easiest way to do this is to supply a colon-separated pair of
@@ -152,6 +176,9 @@ plutusOpts = hsubparser (
     <> command "evaluate"
            (info (Eval <$> evalOpts)
             (progDesc "Evaluate an untyped Plutus Core program using the CEK machine."))
+    <> command "debug"
+           (info (Dbg <$> dbgOpts)
+            (progDesc "Debug an untyped Plutus Core program using the CEK machine."))
     <> command "dump-model"
            (info (pure DumpModel)
             (progDesc "Dump the cost model parameters"))
@@ -218,6 +245,44 @@ runEval (EvalOptions inp ifmt printMode budgetMode traceMode outputMode timingMo
                         None -> pure ()
                         _    -> writeToFileOrStd outputMode (T.unpack (T.intercalate "\n" logs))
 
+---------------- Debugging ----------------
+
+runDbg :: DbgOptions -> IO ()
+runDbg (DbgOptions inp ifmt printMode budgetMode traceMode cekModel) = do
+    prog <- getProgram ifmt inp
+    let term = void $ prog ^. UPLC.progTerm
+        !_ = rnf term
+        ndterm = fromRight undefined $ runExcept @FreeVariableError $ deBruijnTerm term
+        emptySrcSpansNdDterm :: D.DTerm UPLC.DefaultUni UPLC.DefaultFun = fmap (const mempty) ndterm
+    let cekparams = mkMachineParameters @UPLC.DefaultUni @UPLC.DefaultFun def PLC.defaultCekCostModel
+        (MachineParameters costs runtime) = cekparams
+    -- ExBudgetInfo{_exBudgetModeSpender, _exBudgetModeGetFinal, _exBudgetModeGetCumulative} <- getExBudgetInfo
+    -- CekEmitterInfo{_cekEmitterInfoEmit, _cekEmitterInfoGetFinal} <- getEmitterMode _exBudgetModeGetCumulative
+    let ?cekRuntime = runtime
+        ?cekEmitter = undefined
+        ?cekBudgetSpender = undefined
+        ?cekCosts = costs
+        ?cekSlippage = defaultSlippage
+      in Repl.runInputT (Repl.Settings Repl.noCompletion Nothing False) $
+            -- TODO: use cutoff or partialIterT to prevent runaway
+            D.iterTM handleDbg $ D.runDriver emptySrcSpansNdDterm
+
+-- Peel off one layer
+handleDbg :: (Ix fun, Cek.PrettyUni uni fun, D.GivenCekReqs uni fun SrcSpans RealWorld)
+          => D.DebugF uni fun (Repl.InputT IO a)
+          -> Repl.InputT IO a
+handleDbg = \case
+    -- Note that we first turn Cek to IO and then `liftIO` it to InputT;
+    -- the alternative of directly using MonadTrans.lift needs MonadCatch+MonadMask instances for CekM
+    D.StepF prevState k -> liftIO (D.cekMToIO $ D.handleStep prevState) >>= k
+    D.InputF k -> handleInput >>= k
+    D.LogF text k -> handleLog text >> k
+    D.UpdateClientF ds k -> handleUpdate ds >> k
+  where
+    handleInput = read . fromJust <$> Repl.getInputLine "> "
+    handleUpdate s = Repl.outputStrLn "UPDATETUI" -- TODO: implement
+    handleLog = Repl.outputStrLn
+
 ----------------- Print examples -----------------------
 runUplcPrintExample ::
     ExampleOptions -> IO ()
@@ -231,6 +296,7 @@ main = do
     case options of
         Apply     opts         -> runApply        opts
         Eval      opts         -> runEval         opts
+        Dbg     opts         -> runDbg         opts
         Example   opts         -> runUplcPrintExample opts
         Print     opts         -> runPrint        opts
         Convert   opts         -> runConvert @UplcProg     opts

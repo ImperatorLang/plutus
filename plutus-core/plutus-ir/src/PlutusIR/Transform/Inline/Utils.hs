@@ -17,7 +17,7 @@ import PlutusIR.Transform.Rename ()
 import PlutusPrelude
 
 import PlutusCore.Builtin qualified as PLC
-import PlutusCore.InlineUtils
+import Annotation
 import PlutusCore.Name
 import PlutusCore.Quote
 import PlutusCore.Rename

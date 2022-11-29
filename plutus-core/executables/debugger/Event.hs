@@ -12,9 +12,11 @@ import Brick.Widgets.Edit qualified as BE
 import Control.Monad.State
 import Graphics.Vty qualified as Vty
 import Lens.Micro
+import Control.Concurrent.MVar
+import UntypedPlutusCore.Evaluation.Machine.Cek.Debug.Driver qualified as D
 
-handleDebuggerEvent :: B.BrickEvent ResourceName e -> B.EventM ResourceName DebuggerState ()
-handleDebuggerEvent bev@(B.VtyEvent ev) = do
+handleDebuggerEvent :: MVar D.Cmd -> B.BrickEvent ResourceName e -> B.EventM ResourceName DebuggerState ()
+handleDebuggerEvent driverMailbox bev@(B.VtyEvent ev) = do
     focusRing <- gets (^. dsFocusRing)
     let handleEditorEvent = case B.focusGetCurrent focusRing of
             Just EditorUplc ->
@@ -34,7 +36,11 @@ handleDebuggerEvent bev@(B.VtyEvent ev) = do
         Vty.EvKey (Vty.KChar '?') [] ->
             modify' $ set dsKeyBindingsMode KeyBindingsShown
         Vty.EvKey Vty.KEsc [] -> B.halt
-        Vty.EvKey (Vty.KChar 's') [] -> modify' $ \st ->
+        Vty.EvKey (Vty.KChar 's') [] -> do
+          _success <- liftIO $ tryPutMVar driverMailbox D.Step
+          -- MAYBE: when not success we could have a dialog show up saying that the debugger seems to be stuck
+          -- and an option to kill its thread (cek) and reload the program?
+          modify' $ \st ->
             -- Stepping. Currently it highlights one line at a time.
             let highlightNextLine = \case
                     Nothing ->
@@ -42,6 +48,7 @@ handleDebuggerEvent bev@(B.VtyEvent ev) = do
                     Just (HighlightSpan (B.Location (r, c)) _) ->
                         Just (HighlightSpan (B.Location (r + 1, c)) Nothing)
              in st & dsUplcHighlight %~ highlightNextLine
+
         Vty.EvKey (Vty.KChar '\t') [] -> modify' $ \st ->
             st & dsFocusRing %~ B.focusNext
         Vty.EvKey Vty.KBackTab [] -> modify' $ \st ->
@@ -58,4 +65,4 @@ handleDebuggerEvent bev@(B.VtyEvent ev) = do
             -- This disables editing the text, making the editors read-only.
             pure ()
         _ -> handleEditorEvent
-handleDebuggerEvent _ = pure ()
+handleDebuggerEvent _ _ = pure ()

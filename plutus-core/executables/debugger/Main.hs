@@ -3,6 +3,8 @@
 {-# LANGUAGE RecordWildCards   #-}
 {-# LANGUAGE StrictData        #-}
 {-# LANGUAGE TypeApplications  #-}
+{-# LANGUAGE LambdaCase  #-}
+{-# LANGUAGE ImplicitParams  #-}
 
 {- | A Plutus Core debugger TUI application.
 
@@ -13,6 +15,13 @@
 -}
 module Main (main) where
 
+import Annotation
+import UntypedPlutusCore as UPLC
+import UntypedPlutusCore.Evaluation.Machine.Cek.Debug.Driver qualified as D
+import UntypedPlutusCore.Evaluation.Machine.Cek.Debug.Internal
+import PlutusCore.Evaluation.Machine.ExBudgetingDefaults qualified as PLC
+import PlutusCore.Evaluation.Machine.MachineParameters
+
 import Draw
 import Event
 import Types
@@ -20,13 +29,19 @@ import Types
 import Brick.AttrMap qualified as B
 import Brick.Focus qualified as B
 import Brick.Main qualified as B
+import Brick.BChan qualified as B
 import Brick.Util qualified as B
 import Brick.Widgets.Edit qualified as BE
 import Control.Monad.Extra
+import Data.Text qualified as Text
 import Data.Text.IO qualified as Text
 import Graphics.Vty qualified as Vty
 import Options.Applicative qualified as OA
 import System.Directory.Extra
+import Control.Concurrent
+import Control.Monad.ST (RealWorld)
+import PlutusPrelude
+import Control.Monad.Except
 
 debuggerAttrMap :: B.AttrMap
 debuggerAttrMap =
@@ -66,12 +81,17 @@ main = do
         "Does not exist or not a file: " <> optPath opts
     uplcText <- Text.readFile (optPath opts)
 
-    let app :: B.App DebuggerState e ResourceName
+    -- The communication "channels" at debugger-driver and at brick
+    driverMailbox <- newEmptyMVar @D.Cmd
+    -- chan size of 20 is used as default for builtin non-custom events (mouse,key,etc)
+    brickMailbox <- B.newBChan @CustomBrickEvent 20
+
+    let app :: B.App DebuggerState CustomBrickEvent ResourceName
         app =
             B.App
                 { B.appDraw = drawDebugger
                 , B.appChooseCursor = B.showFirstCursor
-                , B.appHandleEvent = handleDebuggerEvent
+                , B.appHandleEvent = handleDebuggerEvent driverMailbox
                 , B.appStartEvent = pure ()
                 , B.appAttrMap = const debuggerAttrMap
                 }
@@ -105,4 +125,53 @@ main = do
                 , _dsVLimitBottomEditors = 20
                 }
 
-    void $ B.defaultMain app initialState
+    let builder = Vty.mkVty Vty.defaultConfig
+    initialVty <- builder
+
+    -- TODO: find out if the driver-thread exits when brick exits
+    -- or should we wait for driver-thread?
+    _dTid <- forkIO $ driverMain driverMailbox brickMailbox uplcText
+
+    void $ B.customMain initialVty builder (Just brickMailbox) app initialState
+
+-- | The custom events that can arrive at our brick mailbox.
+data CustomBrickEvent =
+    UpdateClientEvent (D.DriverState DefaultUni DefaultFun)
+    -- ^ the driver passes a new cek state to the brick client
+    -- this should mean that the brick client should update its tui
+  | LogEvent String
+    -- ^ the driver logged some text, the brick client can decide to show it in the tui
+
+
+-- | The main entrypoint of the driver thread.
+--
+-- The driver operates in IO (not in BrickM): the only way to "influence" Brick is via the mailboxes
+driverMain :: MVar D.Cmd -> B.BChan CustomBrickEvent -> Text.Text -> IO ()
+driverMain driverMailbox brickMailbox uplcText = do
+    let term = undefined -- void $ prog ^. UPLC.progTerm
+        cekparams = mkMachineParameters @UPLC.DefaultUni @UPLC.DefaultFun def PLC.defaultCekCostModel
+        (MachineParameters costs runtime) = cekparams
+    let ndterm = fromRight undefined $ runExcept @FreeVariableError $ deBruijnTerm term
+        emptySrcSpansNdDterm = fmap (const mempty) ndterm
+    -- ExBudgetInfo{_exBudgetModeSpender, _exBudgetModeGetFinal, _exBudgetModeGetCumulative} <- getExBudgetInfo
+    -- CekEmitterInfo{_cekEmitterInfoEmit, _cekEmitterInfoGetFinal} <- getEmitterMode _exBudgetModeGetCumulative
+    let ?cekRuntime = runtime
+        ?cekEmitter = undefined
+        ?cekBudgetSpender = undefined
+        ?cekCosts = costs
+        ?cekSlippage = defaultSlippage
+      in D.iterM handle $ D.runDriver emptySrcSpansNdDterm
+  where
+    -- | Peels off one Free monad layer
+    handle :: GivenCekReqs DefaultUni DefaultFun SrcSpans RealWorld
+           => D.DebugF DefaultUni DefaultFun (IO a)
+           -> IO a
+    handle = \case
+        D.StepF prevState k -> cekMToIO (D.handleStep prevState) >>= k
+        D.InputF k -> handleInput >>= k
+        D.LogF text k -> handleLog text >> k
+        D.UpdateClientF ds k -> handleUpdate ds >> k -- TODO: implement
+      where
+        handleInput = readMVar driverMailbox
+        handleUpdate = B.writeBChan brickMailbox . UpdateClientEvent
+        handleLog = B.writeBChan brickMailbox . LogEvent

@@ -1,12 +1,15 @@
-{-# LANGUAGE StrictData #-}
+module Annotation where
 
--- | Annotations used during the compilation.
-module PlutusTx.Annotation where
-
-import PlutusTx.Code
-
+import Data.Semigroup (Any (..))
 import GHC.Generics
 import Prettyprinter
+import Data.Set (Set)
+
+newtype InlineHints name a = InlineHints { shouldInline :: a -> name -> Bool }
+    deriving (Semigroup, Monoid) via (a -> name -> Any)
+
+instance Show (InlineHints name a) where
+    show _ = "<inline hints>"
 
 -- | An annotation type used during the compilation.
 data Ann = Ann
@@ -38,3 +41,23 @@ annAlwaysInline = Ann{annInline = AlwaysInline, annSrcSpans = mempty}
 -- | Create an `Ann` with `MayInline`.
 annMayInline :: Ann
 annMayInline = Ann{annInline = MayInline, annSrcSpans = mempty}
+
+-- | The span between two source locations.
+--
+-- This corresponds roughly to the `SrcSpan` used by GHC, but we define our own version so we don't have to depend on `ghc` to use it.
+--
+-- The line and column numbers are 1-based, and the unit is Unicode code point (or `Char`).
+data SrcSpan = SrcSpan
+    { srcSpanFile  :: FilePath
+    , srcSpanSLine :: Int
+    , srcSpanSCol  :: Int
+    , srcSpanELine :: Int
+    , srcSpanECol  :: Int
+    }
+    deriving stock (Eq, Ord, Generic, Show, Read)
+
+instance Pretty SrcSpan where
+    pretty = viaShow
+
+type SrcSpans = Set SrcSpan
+

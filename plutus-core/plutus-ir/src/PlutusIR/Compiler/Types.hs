@@ -19,7 +19,7 @@ import Control.Lens
 
 import PlutusCore qualified as PLC
 import PlutusCore.Builtin qualified as PLC
-import PlutusCore.InlineUtils
+import Annotation
 import PlutusCore.MkPlc qualified as PLC
 import PlutusCore.Pretty qualified as PLC
 import PlutusCore.Quote
