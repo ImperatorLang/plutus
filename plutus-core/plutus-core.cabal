@@ -186,6 +186,7 @@ library
     UntypedPlutusCore.Core.Type
     UntypedPlutusCore.DeBruijn
     UntypedPlutusCore.Evaluation.Machine.Cek
+    UntypedPlutusCore.Evaluation.Machine.Cek.ArgQueue
     UntypedPlutusCore.Evaluation.Machine.Cek.CekMachineCosts
     UntypedPlutusCore.Evaluation.Machine.Cek.Internal
     UntypedPlutusCore.MkUPlc

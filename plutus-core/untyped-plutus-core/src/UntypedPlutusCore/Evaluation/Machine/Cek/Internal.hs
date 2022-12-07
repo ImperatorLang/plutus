@@ -67,6 +67,7 @@ import PlutusCore.Evaluation.Machine.MachineParameters
 import PlutusCore.Evaluation.Result
 import PlutusCore.Pretty
 
+import UntypedPlutusCore.Evaluation.Machine.Cek.ArgQueue qualified as ArgQueue
 import UntypedPlutusCore.Evaluation.Machine.Cek.CekMachineCosts (CekMachineCosts (..))
 
 import Control.Lens (ix, (^?))
@@ -82,7 +83,6 @@ import Data.Kind qualified as GHC
 import Data.Semigroup (stimes)
 import Data.Text (Text)
 import Data.Vector qualified as V
-import Data.Vector.Mutable qualified as MV
 import Data.Word
 import Data.Word64Array.Word8 hiding (Index, toList)
 import Prettyprinter
@@ -189,6 +189,8 @@ but functions are not printable and hence we provide a dummy instance.
 instance Show (BuiltinRuntime (CekValue uni fun)) where
     show _ = "<builtin_runtime>"
 
+type Args = []
+
 -- 'Values' for the modified CEK machine.
 data CekValue uni fun =
     -- This bang gave us a 1-2% speed-up at the time of writing.
@@ -216,7 +218,7 @@ data CekValue uni fun =
       !(BuiltinRuntime (CekValue uni fun))
       -- ^ The partial application and its costing function.
       -- Check the docs of 'BuiltinRuntime' for details.
-  | VConstr {-# UNPACK #-} !Int {-# UNPACK #-} !(V.Vector (CekValue uni fun))
+  | VConstr {-# UNPACK #-} !Int {-# UNPACK #-} !(Args (CekValue uni fun))
     deriving stock (Show)
 
 type CekValEnv uni fun = Env.RAList (CekValue uni fun)
@@ -523,24 +525,6 @@ instance HasConstant (CekValue uni fun) where
 
     fromConstant = VCon
 
-data Accumulator i o s = Accumulator {-# UNPACK #-} !Int ![i] {-# UNPACK #-} !(MV.MVector s o)
-
-newAccumulator :: [i] -> ST s (Either (V.Vector o) (i, Accumulator i o s))
-newAccumulator es =
-    case es of
-        [] -> pure $ Left V.empty
-        t : ts -> do
-            let l = length es -- note, length of *whole* list
-            emptyArr <- MV.new l
-            pure $ Right (t, Accumulator 0 ts emptyArr)
-
-stepAccumulator :: Accumulator i o s -> o -> ST s (Either (V.Vector o) (i, Accumulator i o s))
-stepAccumulator (Accumulator nextIndex todo arr) next = do
-    MV.write arr nextIndex next
-    case todo of
-        []     -> Left <$> V.unsafeFreeze arr
-        t : ts -> pure $ Right (t, Accumulator (nextIndex+1) ts arr)
-
 {-|
 The context in which the machine operates.
 
@@ -550,8 +534,9 @@ we can match on context and the top frame in a single, strict pattern match.
 data Context uni fun s
     = FrameApplyFun !(CekValue uni fun) !(Context uni fun s)                         -- ^ @[V _]@
     | FrameApplyArg !(CekValEnv uni fun) !(Term NamedDeBruijn uni fun ()) !(Context uni fun s) -- ^ @[_ N]@
+    | FrameApplyValues {-# UNPACK #-} !(Args (CekValue uni fun)) !(Context uni fun s) -- ^ @[_ N]@
     | FrameForce !(Context uni fun s)                                               -- ^ @(force _)@
-    | FrameConstr !(CekValEnv uni fun) {-# UNPACK #-} !Int {-# UNPACK #-} !(Accumulator (Term NamedDeBruijn uni fun ()) (CekValue uni fun) s) !(Context uni fun s)
+    | FrameConstr !(CekValEnv uni fun) {-# UNPACK #-} !Int {-# UNPACK #-} !(ArgQueue.Acc Args (Term NamedDeBruijn uni fun ()) (CekValue uni fun) s) !(Context uni fun s)
     | FrameCases !(CekValEnv uni fun) ![Term NamedDeBruijn uni fun ()] !(Context uni fun s)
     | NoFrame
     -- deriving stock (Show)
@@ -677,7 +662,7 @@ enterComputeCek = computeCek (toWordArray 0) where
         throwing_ _EvaluationFailure
     computeCek !unbudgetedSteps !ctx !env (Constr _ i es) = do
         !unbudgetedSteps' <- stepAndMaybeSpend BApply unbudgetedSteps
-        acc <- CekM $ newAccumulator es
+        acc <- CekM $ ArgQueue.newAcc es
         case acc of
             Left res        -> returnCek unbudgetedSteps ctx $ VConstr i res
             Right (t, acc') -> computeCek unbudgetedSteps' (FrameConstr env i acc' ctx) env t
@@ -714,21 +699,18 @@ enterComputeCek = computeCek (toWordArray 0) where
     returnCek !unbudgetedSteps (FrameApplyFun fun ctx) arg =
         applyEvaluate unbudgetedSteps ctx fun arg
     returnCek !unbudgetedSteps (FrameConstr env i acc ctx) e = do
-        r <- CekM $ stepAccumulator acc e
+        r <- CekM $ ArgQueue.stepAcc acc e
         case r of
             Right (next, acc') -> computeCek unbudgetedSteps (FrameConstr env i acc' ctx) env next
             Left done          -> returnCek unbudgetedSteps ctx $ VConstr i done
     returnCek !unbudgetedSteps (FrameCases env cs ctx) e = case e of
         (VConstr i args) -> case cs ^? ix i of
-            Just t ->
-                let nArgs = V.length args
-                in case stripNLambdas nArgs t of
-                    Just body ->
-                        let extended = foldl' (\ev arg -> Env.cons arg ev) env args
-                        in computeCek unbudgetedSteps ctx extended body
-                    Nothing -> throwingWithCause _MachineError (WrongNumberOfCaseArgs nArgs) (Just t)
+            Just t  -> computeCek unbudgetedSteps (FrameApplyValues args ctx) env t
             Nothing -> throwingDischarged _MachineError (MissingCaseBranch i) e
         _ -> throwingDischarged _MachineError NonConstrScrutinized e
+    returnCek !unbudgetedSteps (FrameApplyValues args ctx) fun = case ArgQueue.uncons args of
+        Just (arg, rest) -> applyEvaluate unbudgetedSteps (FrameApplyValues rest ctx) fun arg
+        Nothing          -> returnCek unbudgetedSteps ctx fun
 
     -- | @force@ a term and proceed.
     -- If v is a delay then compute the body of v;
