@@ -19,6 +19,7 @@ module PlutusCore.Evaluation.Machine.ExMemory
 
 import PlutusCore.Data
 import PlutusCore.Pretty
+
 import PlutusPrelude
 
 import Codec.Serialise (Serialise)

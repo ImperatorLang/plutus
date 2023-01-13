@@ -2,8 +2,10 @@
 module Main where
 
 import PlutusCore.Evaluation.Machine.ExBudget
+
 import PlutusLedgerApi.Test.EvaluationContext (evalCtxForTesting)
 import PlutusLedgerApi.V1
+
 import UntypedPlutusCore qualified as UPLC
 
 import Common

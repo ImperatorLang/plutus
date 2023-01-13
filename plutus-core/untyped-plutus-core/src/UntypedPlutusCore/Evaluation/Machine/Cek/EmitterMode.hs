@@ -4,6 +4,9 @@
 
 module UntypedPlutusCore.Evaluation.Machine.Cek.EmitterMode (noEmitter, logEmitter, logWithTimeEmitter, logWithBudgetEmitter) where
 
+import PlutusCore.Evaluation.Machine.ExBudget
+import PlutusCore.Evaluation.Machine.ExMemory
+
 import UntypedPlutusCore.Evaluation.Machine.Cek.Internal
 
 import Control.Monad.ST.Unsafe (unsafeIOToST)
@@ -19,8 +22,6 @@ import Data.Text qualified as T
 import Data.Text.Encoding qualified as T
 import Data.Time.Clock
 import Data.Time.Clock.POSIX
-import PlutusCore.Evaluation.Machine.ExBudget
-import PlutusCore.Evaluation.Machine.ExMemory
 
 -- | No emitter.
 noEmitter :: EmitterMode uni fun

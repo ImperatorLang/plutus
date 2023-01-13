@@ -8,12 +8,10 @@ import "cryptonite" Crypto.PubKey.ECC.ECDSA
 import Crypto.PubKey.ECC.Generate
 import Crypto.PubKey.ECC.Types
 import "cryptonite" Crypto.Random
-
 import Data.Map (Map)
 import Data.Map qualified as Map
 import Data.Set (Set)
 import Data.Set qualified as Set
-
 import Examples.Keys
 import Ledger
 import UTxO

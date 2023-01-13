@@ -3,13 +3,13 @@
 -- editorconfig-checker-disable-file
 module Opts where
 
+import PlutusCore.Executable.Common
+import PlutusCore.Executable.Parsers
+
 import Data.Semigroup ((<>))
 import Data.Text qualified as T
 import Data.Text.IO qualified as T
 import Options.Applicative
-
-import PlutusCore.Executable.Common
-import PlutusCore.Executable.Parsers
 
 -- The different evaluation modes of plc-agda
 data EvalMode = U | TL | TCK | TCEK deriving stock (Show, Read)

@@ -24,9 +24,9 @@ module PlutusCore.Subst
     , tvTy
     ) where
 
-import PlutusPrelude
-
 import PlutusCore.Core
+
+import PlutusPrelude
 
 import Control.Lens
 import Control.Lens.Unsound qualified as Unsound

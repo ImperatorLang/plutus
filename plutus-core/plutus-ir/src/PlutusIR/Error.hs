@@ -20,12 +20,12 @@ module PlutusIR.Error
 
 import PlutusCore qualified as PLC
 import PlutusCore.Pretty qualified as PLC
-import PlutusPrelude
 
 import PlutusIR qualified as PIR
 
-import Control.Lens
+import PlutusPrelude
 
+import Control.Lens
 import Data.Text qualified as T
 import ErrorCode
 import Prettyprinter as PP

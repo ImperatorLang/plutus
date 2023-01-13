@@ -13,6 +13,7 @@ import PlutusCore.Normalize as Export (normalizeType)
 import PlutusCore.Normalize.Internal hiding (normalizeTypesInM)
 import PlutusCore.Quote
 import PlutusCore.Rename (rename)
+
 import PlutusIR
 import PlutusIR.Transform.Rename ()
 

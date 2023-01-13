@@ -24,18 +24,17 @@ module PlutusCore.Generators.Hedgehog.Entity
     , withAnyTermLoose
     ) where
 
-import PlutusPrelude
-
-import PlutusCore.Generators.Hedgehog.Denotation
-import PlutusCore.Generators.Hedgehog.TypedBuiltinGen
-import PlutusCore.Generators.Hedgehog.Utils
-
 import PlutusCore.Builtin
 import PlutusCore.Core
 import PlutusCore.Default
+import PlutusCore.Generators.Hedgehog.Denotation
+import PlutusCore.Generators.Hedgehog.TypedBuiltinGen
+import PlutusCore.Generators.Hedgehog.Utils
 import PlutusCore.Name
 import PlutusCore.Pretty (PrettyConst, prettyConst)
 import PlutusCore.Quote
+
+import PlutusPrelude
 
 import Control.Monad.Morph qualified as Morph
 import Control.Monad.Reader

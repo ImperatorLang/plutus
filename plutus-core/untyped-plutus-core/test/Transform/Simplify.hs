@@ -7,6 +7,7 @@ import PlutusCore qualified as PLC
 import PlutusCore.MkPlc
 import PlutusCore.Pretty
 import PlutusCore.Quote
+
 import UntypedPlutusCore
 
 import Control.Lens ((&), (.~))

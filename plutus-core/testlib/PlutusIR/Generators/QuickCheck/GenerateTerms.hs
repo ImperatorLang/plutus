@@ -16,8 +16,9 @@
 
 module PlutusIR.Generators.QuickCheck.GenerateTerms where
 
-import PlutusIR.Generators.QuickCheck.Common
-
+import PlutusCore.Builtin
+import PlutusCore.Core (argsFunKind)
+import PlutusCore.Default
 import PlutusCore.Generators.QuickCheck.Builtin
 import PlutusCore.Generators.QuickCheck.Common
 import PlutusCore.Generators.QuickCheck.GenerateTypes
@@ -26,16 +27,14 @@ import PlutusCore.Generators.QuickCheck.ShrinkTypes
 import PlutusCore.Generators.QuickCheck.Substitutions
 import PlutusCore.Generators.QuickCheck.Unification
 import PlutusCore.Generators.QuickCheck.Utils
-
-import PlutusCore.Builtin
-import PlutusCore.Core (argsFunKind)
-import PlutusCore.Default
 import PlutusCore.MkPlc (mkConstantOf)
 import PlutusCore.Name
 import PlutusCore.Subst (typeSubstClosedType)
+
 import PlutusIR
 import PlutusIR.Compiler
 import PlutusIR.Core.Instance.Pretty.Readable
+import PlutusIR.Generators.QuickCheck.Common
 import PlutusIR.Subst
 
 import Control.Lens ((<&>))

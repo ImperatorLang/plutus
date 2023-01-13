@@ -17,6 +17,9 @@ module Rational.Laws.Helpers (
   normalAndEquivalentToMaybe,
   ) where
 
+import PlutusTx.Prelude qualified as Plutus
+import PlutusTx.Ratio qualified as Ratio
+
 import Data.Functor.Contravariant (contramap)
 import Data.Kind (Type)
 import Data.Maybe (isJust, isNothing)
@@ -25,8 +28,6 @@ import Hedgehog (Gen, MonadTest, Property, PropertyT, assert, cover, failure, fo
 import Hedgehog.Function (Arg (build), CoGen, vary, via)
 import Hedgehog.Gen qualified as Gen
 import Hedgehog.Range qualified as Range
-import PlutusTx.Prelude qualified as Plutus
-import PlutusTx.Ratio qualified as Ratio
 import Prelude
 import Test.Tasty (TestTree, localOption)
 import Test.Tasty.Hedgehog (HedgehogTestLimit (HedgehogTestLimit), testPropertyNamed)

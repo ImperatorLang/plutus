@@ -10,8 +10,6 @@
 
 module PlutusCore.Executable.Common where
 
-import PlutusPrelude
-
 import PlutusCore qualified as PLC
 import PlutusCore.Builtin qualified as PLC
 import PlutusCore.Check.Uniques as PLC (checkProgram)
@@ -32,13 +30,15 @@ import PlutusCore.StdLib.Data.ChurchNat qualified as StdLib
 import PlutusCore.StdLib.Data.Integer qualified as StdLib
 import PlutusCore.StdLib.Data.Unit qualified as StdLib
 
+import PlutusIR.Core.Type qualified as PIR
+import PlutusIR.Parser qualified as PIR (parse, program)
+
+import PlutusPrelude
+
 import UntypedPlutusCore qualified as UPLC
 import UntypedPlutusCore.Check.Uniques qualified as UPLC (checkProgram)
 import UntypedPlutusCore.Evaluation.Machine.Cek qualified as Cek
 import UntypedPlutusCore.Parser qualified as UPLC (parse, program)
-
-import PlutusIR.Core.Type qualified as PIR
-import PlutusIR.Parser qualified as PIR (parse, program)
 
 import Control.DeepSeq (rnf)
 import Control.Lens hiding (ix, op)
@@ -57,7 +57,6 @@ import Data.Text.IO qualified as T
 import Flat (Flat, flat, unflat)
 import GHC.TypeLits (symbolVal)
 import Prettyprinter ((<+>))
-
 import System.CPUTime (getCPUTime)
 import System.Exit (exitFailure, exitSuccess)
 import System.Mem (performGC)

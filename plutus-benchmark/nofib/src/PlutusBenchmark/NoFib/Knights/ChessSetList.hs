@@ -20,14 +20,13 @@ module PlutusBenchmark.NoFib.Knights.ChessSetList
       isSquareFree
     ) where
 
-import Control.DeepSeq (NFData)
-import GHC.Generics
-
 import PlutusBenchmark.NoFib.Knights.Sort
 import PlutusBenchmark.NoFib.Knights.Utils
 
 import PlutusTx.Prelude as Tx
 
+import Control.DeepSeq (NFData)
+import GHC.Generics
 import Prelude qualified as Haskell
 
 

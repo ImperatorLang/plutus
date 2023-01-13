@@ -51,8 +51,6 @@ module Text.PrettyBy.Internal
     , PrettyAny (..)
     ) where
 
-import Text.Pretty
-
 import Data.Bifunctor
 import Data.Coerce
 import Data.Functor.Const
@@ -67,6 +65,7 @@ import Data.Void
 import Data.Word
 import GHC.Natural
 import GHC.TypeLits
+import Text.Pretty
 
 -- ##########################
 -- ## The 'PrettyBy' class ##

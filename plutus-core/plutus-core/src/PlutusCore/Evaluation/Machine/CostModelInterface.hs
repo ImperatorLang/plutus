@@ -16,6 +16,7 @@ where
 
 import PlutusCore.Evaluation.Machine.BuiltinCostModel ()
 import PlutusCore.Evaluation.Machine.MachineParameters (CostModel (..))
+
 import UntypedPlutusCore.Evaluation.Machine.Cek.CekMachineCosts (CekMachineCosts, cekMachineCostsPrefix)
 
 import Control.Exception

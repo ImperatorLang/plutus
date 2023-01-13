@@ -2,7 +2,9 @@ module PlutusTx.PLCTypes where
 
 import PlutusCore qualified as PLC
 import PlutusCore.MkPlc qualified as PLC
+
 import PlutusTx.Annotation
+
 import UntypedPlutusCore qualified as UPLC
 
 type PLCKind = PLC.Kind Ann

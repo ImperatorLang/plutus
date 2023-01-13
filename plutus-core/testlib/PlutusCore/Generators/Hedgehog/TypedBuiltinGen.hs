@@ -19,11 +19,11 @@ module PlutusCore.Generators.Hedgehog.TypedBuiltinGen
     , genTypedBuiltinDef
     ) where
 
-import PlutusPrelude
-
 import PlutusCore
 import PlutusCore.Builtin
 import PlutusCore.Pretty
+
+import PlutusPrelude
 
 import Data.ByteString qualified as BS
 import Data.Functor.Identity

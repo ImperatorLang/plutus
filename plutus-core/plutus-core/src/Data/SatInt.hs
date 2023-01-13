@@ -25,11 +25,8 @@ import Data.Csv
 import Data.Primitive (Prim)
 import GHC.Base
 import GHC.Generics
-#if MIN_VERSION_base(4,16,0)
 import GHC.Integer (smallInteger)
-#else
 import GHC.Num (smallInteger)
-#endif
 import GHC.Real
 import Language.Haskell.TH.Syntax (Lift)
 import NoThunks.Class

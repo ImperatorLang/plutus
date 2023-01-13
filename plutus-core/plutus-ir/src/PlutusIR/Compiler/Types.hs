@@ -8,15 +8,6 @@
 {-# LANGUAGE TypeOperators         #-}
 module PlutusIR.Compiler.Types where
 
-import PlutusIR qualified as PIR
-import PlutusIR.Compiler.Provenance
-import PlutusIR.Error
-
-import Control.Monad.Except
-import Control.Monad.Reader
-
-import Control.Lens
-
 import PlutusCore qualified as PLC
 import PlutusCore.Builtin qualified as PLC
 import PlutusCore.InlineUtils
@@ -25,8 +16,16 @@ import PlutusCore.Pretty qualified as PLC
 import PlutusCore.Quote
 import PlutusCore.StdLib.Type qualified as Types
 import PlutusCore.TypeCheck.Internal qualified as PLC
+
+import PlutusIR qualified as PIR
+import PlutusIR.Compiler.Provenance
+import PlutusIR.Error
+
 import PlutusPrelude
 
+import Control.Lens
+import Control.Monad.Except
+import Control.Monad.Reader
 import Data.Text qualified as T
 
 -- | Extra flag to be passed in the TypeCheckM Reader context,

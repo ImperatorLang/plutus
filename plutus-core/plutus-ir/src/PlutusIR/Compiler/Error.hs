@@ -14,7 +14,6 @@ import PlutusCore.Pretty qualified as PLC
 
 import Control.Exception
 import Control.Lens
-
 import Data.Text qualified as T
 import Data.Typeable
 import Prettyprinter ((<+>))

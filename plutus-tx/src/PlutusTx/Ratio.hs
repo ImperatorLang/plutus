@@ -36,6 +36,7 @@ module PlutusTx.Ratio(
 import PlutusTx.Applicative qualified as P
 import PlutusTx.Base qualified as P
 import PlutusTx.Bool qualified as P
+import PlutusTx.Builtins qualified as Builtins
 import PlutusTx.Eq qualified as P
 import PlutusTx.ErrorCodes qualified as P
 import PlutusTx.Integer (Integer)
@@ -45,8 +46,6 @@ import PlutusTx.Maybe qualified as P
 import PlutusTx.Numeric qualified as P
 import PlutusTx.Ord qualified as P
 import PlutusTx.Trace qualified as P
-
-import PlutusTx.Builtins qualified as Builtins
 
 import Control.Monad (guard)
 import Data.Aeson (FromJSON (parseJSON), ToJSON (toJSON), object, withObject, (.:))

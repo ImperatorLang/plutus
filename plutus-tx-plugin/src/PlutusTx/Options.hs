@@ -11,7 +11,10 @@
 module PlutusTx.Options where
 
 import PlutusIR.Compiler qualified as PIR
+
 import PlutusTx.Compiler.Types
+
+import UntypedPlutusCore qualified as UPLC
 
 import Control.Exception
 import Control.Lens
@@ -29,10 +32,8 @@ import Data.Type.Equality
 import GHC.Plugins qualified as GHC
 import Prettyprinter
 import PyF (fmt)
-
 import Text.Read (readMaybe)
 import Type.Reflection
-import UntypedPlutusCore qualified as UPLC
 
 data PluginOptions = PluginOptions
     { _posDoTypecheck                    :: Bool

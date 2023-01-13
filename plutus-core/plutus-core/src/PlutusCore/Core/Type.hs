@@ -53,10 +53,10 @@ module PlutusCore.Core.Type
     )
 where
 
-import PlutusPrelude
-
 import PlutusCore.Evaluation.Machine.ExMemory
 import PlutusCore.Name
+
+import PlutusPrelude
 
 import Control.Lens
 import Data.Hashable

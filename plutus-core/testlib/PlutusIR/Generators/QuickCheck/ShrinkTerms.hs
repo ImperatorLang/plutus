@@ -9,22 +9,21 @@
 
 module PlutusIR.Generators.QuickCheck.ShrinkTerms where
 
-import PlutusIR.Generators.QuickCheck.Common
-
+import PlutusCore.Builtin
+import PlutusCore.Data
+import PlutusCore.Default
 import PlutusCore.Generators.QuickCheck.Builtin
 import PlutusCore.Generators.QuickCheck.Common
 import PlutusCore.Generators.QuickCheck.ShrinkTypes
 import PlutusCore.Generators.QuickCheck.Substitutions
 import PlutusCore.Generators.QuickCheck.Utils
-
-import PlutusCore.Builtin
-import PlutusCore.Data
-import PlutusCore.Default
 import PlutusCore.MkPlc (mkConstant, mkConstantOf, mkTyBuiltin)
 import PlutusCore.Name
 import PlutusCore.Pretty
 import PlutusCore.Subst (typeSubstClosedType)
+
 import PlutusIR
+import PlutusIR.Generators.QuickCheck.Common
 import PlutusIR.Subst
 
 import Data.Bifunctor

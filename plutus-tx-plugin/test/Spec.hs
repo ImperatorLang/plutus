@@ -6,10 +6,9 @@ import Lift.Spec qualified as Lift
 import Optimization.Spec qualified as Optimization
 import Plugin.Spec qualified as Plugin
 import StdLib.Spec qualified as Lib
-import TH.Spec qualified as TH
-
 import Test.Tasty
 import Test.Tasty.Extras
+import TH.Spec qualified as TH
 
 main :: IO ()
 main = defaultMain $ runTestNestedIn ["test"] tests

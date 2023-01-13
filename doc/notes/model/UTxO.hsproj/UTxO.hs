@@ -30,7 +30,6 @@ import Data.Map qualified as Map
 import Data.Maybe
 import Data.Set (Set)
 import Data.Set qualified as Set
-
 import Ledger
 import Types
 import Witness

@@ -9,23 +9,23 @@
 
 module PlutusIR.Transform.Inline.Utils where
 
-import PlutusIR
-import PlutusIR.Analysis.Dependencies qualified as Deps
-import PlutusIR.Analysis.Usages qualified as Usages
-import PlutusIR.Purity (firstEffectfulTerm, isPure)
-import PlutusIR.Transform.Rename ()
-import PlutusPrelude
-
 import PlutusCore.Builtin qualified as PLC
 import PlutusCore.InlineUtils
 import PlutusCore.Name
 import PlutusCore.Quote
 import PlutusCore.Rename
 
+import PlutusIR
+import PlutusIR.Analysis.Dependencies qualified as Deps
+import PlutusIR.Analysis.Usages qualified as Usages
+import PlutusIR.Purity (firstEffectfulTerm, isPure)
+import PlutusIR.Transform.Rename ()
+
+import PlutusPrelude
+
 import Control.Lens hiding (Strict)
 import Control.Monad.Reader
 import Control.Monad.State
-
 import Data.Map qualified as Map
 import Data.Semigroup.Generic (GenericSemigroupMonoid (..))
 

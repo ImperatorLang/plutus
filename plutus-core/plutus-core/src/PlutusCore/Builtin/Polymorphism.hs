@@ -16,11 +16,11 @@ module PlutusCore.Builtin.Polymorphism
     , TyForallRep
     ) where
 
-import PlutusPrelude
-
 import PlutusCore.Builtin.HasConstant
 import PlutusCore.Core
 import PlutusCore.Evaluation.Machine.ExMemory
+
+import PlutusPrelude
 
 import Data.Kind qualified as GHC (Type)
 import GHC.Ix

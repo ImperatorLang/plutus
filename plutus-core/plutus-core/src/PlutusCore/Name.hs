@@ -35,9 +35,9 @@ module PlutusCore.Name
     , isEmpty
     ) where
 
-import PlutusPrelude
-
 import PlutusCore.Pretty.ConfigName
+
+import PlutusPrelude
 
 import Control.Lens
 import Data.Hashable

@@ -22,18 +22,19 @@ module PlutusBenchmark.NoFib.Queens where
 	See Proceedings of WAAAPL '99
 -}
 
+import PlutusBenchmark.Common (Term, compiledCodeToTerm)
+
+import PlutusCore.Pretty qualified as PLC
+
+import PlutusTx qualified as Tx
+import PlutusTx.Prelude as TxPrelude hiding (abs, sortBy)
+
 import Control.DeepSeq (NFData)
 import Control.Monad (forM_)
 import Data.Char (isSpace)
 import GHC.Generics
 import Prelude qualified as Haskell
 import System.Environment
-
-import PlutusBenchmark.Common (Term, compiledCodeToTerm)
-
-import PlutusCore.Pretty qualified as PLC
-import PlutusTx qualified as Tx
-import PlutusTx.Prelude as TxPrelude hiding (abs, sortBy)
 
 -----------------------------
 -- The main program

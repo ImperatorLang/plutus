@@ -24,6 +24,7 @@ module PlutusTx (
     liftCode) where
 
 import PlutusCore.Data (Data (..))
+
 import PlutusTx.Builtins (BuiltinData, builtinDataToData, dataToBuiltinData)
 import PlutusTx.Code (CompiledCode, CompiledCodeIn, applyCode, getPir, getPlc)
 import PlutusTx.IsData (FromData (..), ToData (..), UnsafeFromData (..), fromData, makeIsDataIndexed, toData,

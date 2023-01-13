@@ -3,16 +3,15 @@
 -- | Functions for computing variable usage inside terms and types.
 module PlutusIR.Analysis.Usages (termUsages, typeUsages, Usages, getUsageCount, allUsed) where
 
-import PlutusPrelude ((<^>))
+import PlutusCore qualified as PLC
+import PlutusCore.Name qualified as PLC
 
 import PlutusIR
 import PlutusIR.Subst
 
-import PlutusCore qualified as PLC
-import PlutusCore.Name qualified as PLC
+import PlutusPrelude ((<^>))
 
 import Control.Lens
-
 import Data.MultiSet qualified as MSet
 import Data.MultiSet.Lens
 import Data.Set qualified as Set

@@ -36,11 +36,10 @@ import Codec.Serialise (deserialise)
 import Data.ByteString.Lazy qualified as BSL (fromStrict, length)
 import Data.Maybe (fromJust)
 import Data.Text (Text)
-import Text.Hex (decodeHex)
-import Text.Printf (printf)
-
 import Test.Tasty
 import Test.Tasty.HUnit
+import Text.Hex (decodeHex)
+import Text.Printf (printf)
 
 tests :: TestTree
 tests = testGroup "CBOR"

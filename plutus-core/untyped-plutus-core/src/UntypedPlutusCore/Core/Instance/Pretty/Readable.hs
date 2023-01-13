@@ -10,13 +10,13 @@
 
 module UntypedPlutusCore.Core.Instance.Pretty.Readable () where
 
-import PlutusPrelude
-
-import UntypedPlutusCore.Core.Type
-
 import PlutusCore.Core.Instance.Pretty.Common ()
 import PlutusCore.Pretty.PrettyConst
 import PlutusCore.Pretty.Readable
+
+import PlutusPrelude
+
+import UntypedPlutusCore.Core.Type
 
 import Prettyprinter
 import Universe

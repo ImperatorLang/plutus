@@ -31,24 +31,22 @@ module PlutusIR.Compiler.Definitions (DefT
                                               , lookupConstructors
                                               , lookupDestructor) where
 
-import PlutusIR as PIR
-import PlutusIR.MkPir hiding (error)
-
 import PlutusCore.MkPlc qualified as PLC
 import PlutusCore.Quote
 
+import PlutusIR as PIR
+import PlutusIR.MkPir hiding (error)
+
+import Algebra.Graph.AdjacencyMap qualified as AM
+import Algebra.Graph.AdjacencyMap.Algorithm qualified as AM
+import Algebra.Graph.NonEmpty.AdjacencyMap qualified as NAM
+import Algebra.Graph.ToGraph qualified as Graph
 import Control.Lens
 import Control.Monad.Except
 import Control.Monad.Morph qualified as MM
 import Control.Monad.Reader
 import Control.Monad.State
 import Control.Monad.Writer
-
-import Algebra.Graph.AdjacencyMap qualified as AM
-import Algebra.Graph.AdjacencyMap.Algorithm qualified as AM
-import Algebra.Graph.NonEmpty.AdjacencyMap qualified as NAM
-import Algebra.Graph.ToGraph qualified as Graph
-
 import Data.Bifunctor (first, second)
 import Data.Foldable
 import Data.Map qualified as Map

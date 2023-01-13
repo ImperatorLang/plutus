@@ -12,6 +12,7 @@ import PlutusCore.Default
 import PlutusCore.Name
 import PlutusCore.TypeCheck (defKindCheckConfig)
 import PlutusCore.TypeCheck.Internal (inferKindM, runTypeCheckM, withTyVar)
+
 import PlutusIR
 import PlutusIR.Error
 

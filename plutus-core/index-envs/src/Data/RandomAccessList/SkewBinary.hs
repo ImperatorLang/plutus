@@ -15,10 +15,9 @@ module Data.RandomAccessList.SkewBinary
     ) where
 
 import Data.Bits (unsafeShiftR)
+import Data.RandomAccessList.Class qualified as RAL
 import Data.Word
 import GHC.Exts
-
-import Data.RandomAccessList.Class qualified as RAL
 
 -- | A complete binary tree.
 -- Note: the size of the tree is not stored/cached,

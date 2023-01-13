@@ -3,9 +3,10 @@
 
 module Rational.Laws.Serialization (serializationLaws) where
 
+import PlutusTx.IsData.Class (fromBuiltinData, toBuiltinData, unsafeFromBuiltinData)
+
 import Data.Aeson (decode, encode)
 import Hedgehog (Property, property, tripping, (===))
-import PlutusTx.IsData.Class (fromBuiltinData, toBuiltinData, unsafeFromBuiltinData)
 import Prelude
 import Rational.Laws.Helpers (forAllWithPP, genRational)
 import Test.Tasty (TestTree)

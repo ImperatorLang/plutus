@@ -32,11 +32,11 @@ module PlutusCore.Evaluation.Machine.Exception
     , unsafeExtractEvaluationResult
     ) where
 
-import PlutusPrelude
-
 import PlutusCore.Core.Instance.Pretty.Common ()
 import PlutusCore.Evaluation.Result
 import PlutusCore.Pretty
+
+import PlutusPrelude
 
 import Control.Lens
 import Control.Monad.Error.Lens (throwing, throwing_)

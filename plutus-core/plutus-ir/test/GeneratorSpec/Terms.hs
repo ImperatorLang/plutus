@@ -7,15 +7,15 @@
 
 module GeneratorSpec.Terms where
 
-import PlutusCore.Generators.QuickCheck
-import PlutusIR.Generators.QuickCheck
-
 import PlutusCore.Default
+import PlutusCore.Generators.QuickCheck
 import PlutusCore.Name
 import PlutusCore.Quote
 import PlutusCore.Rename
+
 import PlutusIR
 import PlutusIR.Core.Instance.Pretty.Readable
+import PlutusIR.Generators.QuickCheck
 
 import Control.Monad.Reader
 import Data.Char

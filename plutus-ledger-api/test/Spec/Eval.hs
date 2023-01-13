@@ -6,9 +6,11 @@ module Spec.Eval (tests) where
 import PlutusCore.Default
 import PlutusCore.Evaluation.Machine.ExBudget
 import PlutusCore.MkPlc
+
 import PlutusLedgerApi.Common.Versions
 import PlutusLedgerApi.Test.EvaluationContext (evalCtxForTesting)
 import PlutusLedgerApi.V1 as Api
+
 import UntypedPlutusCore as UPLC
 
 import Data.Either

@@ -2,13 +2,13 @@
 
 module PlutusCore.Generators.QuickCheck.Substitutions where
 
+import PlutusCore.Default
 import PlutusCore.Generators.QuickCheck.Common
 import PlutusCore.Generators.QuickCheck.GenerateTypes
 import PlutusCore.Generators.QuickCheck.ShrinkTypes
 import PlutusCore.Generators.QuickCheck.Utils
-
-import PlutusCore.Default
 import PlutusCore.Name
+
 import PlutusIR
 import PlutusIR.Subst
 

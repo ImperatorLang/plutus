@@ -2,6 +2,7 @@
 module Main where
 
 import PlutusLedgerApi.V1
+
 import UntypedPlutusCore qualified as UPLC
 
 import Common

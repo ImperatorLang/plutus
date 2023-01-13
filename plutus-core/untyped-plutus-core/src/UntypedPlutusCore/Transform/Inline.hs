@@ -22,24 +22,24 @@ See Note [The problem of inlining destructors].
 -}
 module UntypedPlutusCore.Transform.Inline (inline, InlineHints (..)) where
 
+import PlutusCore qualified as PLC
+import PlutusCore.Builtin qualified as PLC
+import PlutusCore.InlineUtils
+import PlutusCore.Name
+import PlutusCore.Quote
 import PlutusCore.Rename (Dupable, dupable, liftDupable)
+
 import PlutusPrelude
+
 import UntypedPlutusCore.Analysis.Usages qualified as Usages
 import UntypedPlutusCore.Core.Plated
 import UntypedPlutusCore.Core.Type
 import UntypedPlutusCore.MkUPlc
 import UntypedPlutusCore.Rename ()
 
-import PlutusCore qualified as PLC
-import PlutusCore.Builtin qualified as PLC
-import PlutusCore.InlineUtils
-import PlutusCore.Name
-import PlutusCore.Quote
-
 import Control.Lens hiding (Strict)
 import Control.Monad.Reader
 import Control.Monad.State
-
 import Data.Semigroup.Generic (GenericSemigroupMonoid (..))
 import Witherable (wither)
 

@@ -22,13 +22,13 @@ module UntypedPlutusCore.Evaluation.Machine.Cek.ExBudgetMode
     )
 where
 
-import PlutusPrelude
-
-import UntypedPlutusCore.Evaluation.Machine.Cek.Internal
-
 import PlutusCore.Evaluation.Machine.ExBudget
 import PlutusCore.Evaluation.Machine.Exception
 import PlutusCore.Evaluation.Machine.ExMemory (ExCPU (..), ExMemory (..))
+
+import PlutusPrelude
+
+import UntypedPlutusCore.Evaluation.Machine.Cek.Internal
 
 import Control.Lens (ifoldMap)
 import Control.Monad.Except

@@ -18,6 +18,7 @@ module PlutusLedgerApi.Test.EvaluationEvent (
 
 import PlutusCore.Data qualified as PLC
 import PlutusCore.Pretty
+
 import PlutusLedgerApi.Common
 import PlutusLedgerApi.V1 qualified as V1
 import PlutusLedgerApi.V2 qualified as V2

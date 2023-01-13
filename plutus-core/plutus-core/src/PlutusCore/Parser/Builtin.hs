@@ -4,13 +4,13 @@
 
 module PlutusCore.Parser.Builtin where
 
-import PlutusPrelude (Word8, reoption)
-
 import PlutusCore.Default
 import PlutusCore.Error (ParserError (UnknownBuiltinFunction))
 import PlutusCore.Parser.ParserCommon
 import PlutusCore.Parser.Type (defaultUni)
 import PlutusCore.Pretty (display)
+
+import PlutusPrelude (Word8, reoption)
 
 import Control.Monad.Combinators
 import Data.ByteString (ByteString, pack)

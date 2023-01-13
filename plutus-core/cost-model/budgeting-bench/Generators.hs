@@ -13,7 +13,6 @@ import Data.Int (Int64)
 import Data.List (foldl')
 import Data.Text (Text)
 import Data.Word (Word64)
-
 import Hedgehog qualified as H
 import Hedgehog.Internal.Gen qualified as G
 import Hedgehog.Internal.Range qualified as R

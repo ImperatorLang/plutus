@@ -40,7 +40,6 @@ import Data.ByteArray qualified as BA
 import Data.ByteString.Char8 qualified as BS
 import Language.Haskell.TH
 import Language.Haskell.TH.Syntax
-
 import Types
 
 

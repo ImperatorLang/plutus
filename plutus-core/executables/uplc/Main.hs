@@ -12,17 +12,16 @@ import PlutusCore.Evaluation.Machine.ExMemory (ExCPU (..), ExMemory (..))
 import PlutusCore.Executable.Common
 import PlutusCore.Executable.Parsers
 
-import Data.Foldable
-import Data.Functor (void)
-import Data.List (nub)
-import Data.List.Split (splitOn)
-import Data.Text qualified as T
-
 import UntypedPlutusCore qualified as UPLC
 import UntypedPlutusCore.Evaluation.Machine.Cek qualified as Cek
 
 import Control.DeepSeq (NFData, rnf)
 import Control.Lens
+import Data.Foldable
+import Data.Functor (void)
+import Data.List (nub)
+import Data.List.Split (splitOn)
+import Data.Text qualified as T
 import Options.Applicative
 import System.Exit (exitFailure)
 import System.IO (hPrint, stderr)

@@ -15,7 +15,6 @@ import Data.ByteArray qualified as BA
 import Data.ByteString.Char8 qualified as BS
 import Data.Set (Set)
 import Data.Set qualified as Set
-
 import Types
 import Witness
 

@@ -5,7 +5,6 @@ import GeneratorSpec.Builtin
 import GeneratorSpec.Substitution
 import GeneratorSpec.Terms
 import GeneratorSpec.Types
-
 import Test.QuickCheck
 import Test.Tasty
 import Test.Tasty.Extras

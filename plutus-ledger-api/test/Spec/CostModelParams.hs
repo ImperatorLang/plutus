@@ -3,15 +3,15 @@
 {-# LANGUAGE TypeApplications #-}
 module Spec.CostModelParams where
 
-import PlutusLedgerApi.Common
-import PlutusLedgerApi.V1 as V1
-import PlutusLedgerApi.V2 as V2
-import PlutusLedgerApi.V3 as V3
-
 import PlutusCore.Evaluation.Machine.BuiltinCostModel as Plutus
 import PlutusCore.Evaluation.Machine.CostModelInterface as Plutus
 import PlutusCore.Evaluation.Machine.ExBudgetingDefaults as Plutus
 import PlutusCore.Evaluation.Machine.MachineParameters as Plutus
+
+import PlutusLedgerApi.Common
+import PlutusLedgerApi.V1 as V1
+import PlutusLedgerApi.V2 as V2
+import PlutusLedgerApi.V3 as V3
 
 import Barbies
 import Control.Lens

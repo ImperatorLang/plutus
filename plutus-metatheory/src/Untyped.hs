@@ -4,6 +4,7 @@ module Untyped where
 
 import PlutusCore.Data
 import PlutusCore.Default
+
 import UntypedPlutusCore
 
 import Data.ByteString as BS

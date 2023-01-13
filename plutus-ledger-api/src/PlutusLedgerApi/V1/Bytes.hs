@@ -14,6 +14,9 @@ module PlutusLedgerApi.V1.Bytes
     , encodeByteString
     ) where
 
+import PlutusTx
+import PlutusTx.Prelude qualified as P
+
 import Control.DeepSeq (NFData)
 import Control.Exception
 import Data.ByteString qualified as BS
@@ -25,8 +28,6 @@ import Data.Text qualified as Text
 import Data.Text.Encoding qualified as TE
 import Data.Word (Word8)
 import GHC.Generics (Generic)
-import PlutusTx
-import PlutusTx.Prelude qualified as P
 import Prettyprinter.Extras (Pretty, PrettyShow (..))
 
 {- | An error that is encountered when converting a `ByteString` to a `LedgerBytes`. -}

@@ -30,13 +30,12 @@ module PlutusTx.Coverage ( CoverageAnnotation(..)
                          , coverageDataFromLogMsg
                          ) where
 
-import Control.Lens
-
-import Codec.Serialise
-
 import PlutusCore.Flat
 
+import Codec.Serialise
 import Control.DeepSeq
+import Control.Lens
+import Control.Monad.Writer
 import Data.Aeson (FromJSON, FromJSONKey, ToJSON, ToJSONKey)
 import Data.Foldable
 import Data.Map (Map)
@@ -44,15 +43,10 @@ import Data.Map qualified as Map
 import Data.Set (Set)
 import Data.Set qualified as Set
 import Data.String
-import Text.Read
-
-import Control.Monad.Writer
-
-import Prettyprinter
-
-import Prelude
-
 import Flat hiding (to)
+import Prelude
+import Prettyprinter
+import Text.Read
 
 {- Note [Coverage annotations]
    During compilation we can insert coverage annotations in `trace` calls in

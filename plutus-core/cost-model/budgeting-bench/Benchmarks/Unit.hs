@@ -6,10 +6,9 @@ import PlutusCore
 import PlutusCore.Evaluation.Machine.ExMemory
 
 import Common
-import Generators
-
 import Control.DeepSeq (NFData)
 import Criterion.Main
+import Generators
 import System.Random (StdGen)
 
 

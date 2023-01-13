@@ -15,8 +15,11 @@ module PlutusLedgerApi.Common.SerialisedScript
     ) where
 
 import PlutusCore
+
 import PlutusLedgerApi.Common.Versions
+
 import PlutusTx.Code
+
 import UntypedPlutusCore qualified as UPLC
 
 import Codec.CBOR.Decoding qualified as CBOR

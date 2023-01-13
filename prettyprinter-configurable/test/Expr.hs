@@ -10,10 +10,6 @@ module Expr
     ( test_expr
     ) where
 
-import Text.Pretty
-import Text.PrettyBy
-import Text.PrettyBy.Fixity
-
 import Control.Monad.Combinators.Expr
 import Data.Bifunctor
 import Data.Char
@@ -26,6 +22,9 @@ import Test.Tasty.HUnit
 import Text.Megaparsec
 import Text.Megaparsec.Char
 import Text.Megaparsec.Char.Lexer qualified as Lexer
+import Text.Pretty
+import Text.PrettyBy
+import Text.PrettyBy.Fixity
 
 data Expr
     = Var Text                   -- ^ A variable.

@@ -29,12 +29,12 @@ module PlutusCore.Error
     , ShowErrorComponent (..)
     ) where
 
-import PlutusPrelude
-
 import PlutusCore.Core
 import PlutusCore.DeBruijn.Internal
 import PlutusCore.Name
 import PlutusCore.Pretty
+
+import PlutusPrelude
 
 import Control.Lens hiding (use)
 import Control.Monad.Error.Lens

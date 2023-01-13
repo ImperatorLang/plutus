@@ -1,7 +1,5 @@
 module Plugin.Spec where
 
-import Test.Tasty.Extras
-
 import Plugin.Basic.Spec
 import Plugin.Coverage.Spec
 import Plugin.Data.Spec
@@ -13,6 +11,7 @@ import Plugin.Primitives.Spec
 import Plugin.Profiling.Spec
 import Plugin.Strict.Spec
 import Plugin.Typeclasses.Spec
+import Test.Tasty.Extras
 
 tests :: TestNested
 tests = testNested "Plugin" [

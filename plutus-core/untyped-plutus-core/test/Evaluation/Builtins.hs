@@ -2,7 +2,6 @@ module Evaluation.Builtins (test_builtins) where
 
 import Evaluation.Builtins.Definition (test_definition)
 import Evaluation.Builtins.MakeRead (test_makeRead)
-
 import Test.Tasty
 
 test_builtins :: TestTree

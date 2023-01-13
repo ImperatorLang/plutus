@@ -1,13 +1,12 @@
 -- editorconfig-checker-disable-file
 module Benchmarks.Lists (makeBenchmarks) where
 
-import Common
-import Generators
-
 import PlutusCore
 
+import Common
 import Criterion.Main
 import Data.ByteString (ByteString)
+import Generators
 import Hedgehog qualified as H
 import System.Random (StdGen)
 

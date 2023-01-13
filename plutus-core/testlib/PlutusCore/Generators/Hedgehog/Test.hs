@@ -16,19 +16,18 @@ module PlutusCore.Generators.Hedgehog.Test
     , propEvaluate
     ) where
 
-import PlutusPrelude (ShowPretty (..))
-
-import PlutusCore.Generators.Hedgehog.Interesting
-import PlutusCore.Generators.Hedgehog.TypeEvalCheck
-import PlutusCore.Generators.Hedgehog.Utils
-
 import PlutusCore.Builtin
 import PlutusCore.Core
 import PlutusCore.Default
 import PlutusCore.Evaluation.Machine.Exception
 import PlutusCore.Evaluation.Result
+import PlutusCore.Generators.Hedgehog.Interesting
+import PlutusCore.Generators.Hedgehog.TypeEvalCheck
+import PlutusCore.Generators.Hedgehog.Utils
 import PlutusCore.Name
 import PlutusCore.Pretty
+
+import PlutusPrelude (ShowPretty (..))
 
 import Control.Monad.Except
 import Data.Functor ((<&>))

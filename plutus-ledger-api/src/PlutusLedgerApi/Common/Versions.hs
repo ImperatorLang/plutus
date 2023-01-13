@@ -14,7 +14,9 @@ module PlutusLedgerApi.Common.Versions
     ) where
 
 import PlutusCore
+
 import PlutusLedgerApi.Common.ProtocolVersions
+
 import PlutusPrelude
 
 import Data.Map qualified as Map

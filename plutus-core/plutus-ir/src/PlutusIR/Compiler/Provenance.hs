@@ -5,9 +5,9 @@
 -- | Module handling provenances of terms.
 module PlutusIR.Compiler.Provenance where
 
-import PlutusIR
-
 import PlutusCore.Pretty qualified as PLC
+
+import PlutusIR
 
 import Data.Set qualified as S
 import Prettyprinter ((<+>))

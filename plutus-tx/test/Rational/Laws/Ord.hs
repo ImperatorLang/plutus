@@ -3,8 +3,9 @@
 
 module Rational.Laws.Ord (ordLaws) where
 
-import Hedgehog (Property, PropertyT, property, success, (/==), (===))
 import PlutusTx.Prelude qualified as Plutus
+
+import Hedgehog (Property, PropertyT, property, success, (/==), (===))
 import Prelude
 import Rational.Laws.Helpers (forAllWithPP, genRational, normalAndEquivalentTo, testEntangled, testEntangled3)
 import Test.Tasty (TestTree)

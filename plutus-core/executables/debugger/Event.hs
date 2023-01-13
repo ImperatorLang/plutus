@@ -3,8 +3,6 @@
 -- | Handler of debugger events.
 module Event where
 
-import Types
-
 import Brick.Focus qualified as B
 import Brick.Main qualified as B
 import Brick.Types qualified as B
@@ -12,6 +10,7 @@ import Brick.Widgets.Edit qualified as BE
 import Control.Monad.State
 import Graphics.Vty qualified as Vty
 import Lens.Micro
+import Types
 
 handleDebuggerEvent :: B.BrickEvent ResourceName e -> B.EventM ResourceName DebuggerState ()
 handleDebuggerEvent bev@(B.VtyEvent ev) = do

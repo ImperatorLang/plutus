@@ -19,18 +19,17 @@ module PlutusCore.Generators.Hedgehog.TypeEvalCheck
     , unsafeTypeEvalCheck
     ) where
 
-import PlutusPrelude
-
-import PlutusCore.Generators.Hedgehog.TypedBuiltinGen
-import PlutusCore.Generators.Hedgehog.Utils
-
 import PlutusCore
 import PlutusCore.Builtin
 import PlutusCore.Evaluation.Machine.Ck
 import PlutusCore.Evaluation.Machine.ExBudgetingDefaults
 import PlutusCore.Evaluation.Machine.Exception
+import PlutusCore.Generators.Hedgehog.TypedBuiltinGen
+import PlutusCore.Generators.Hedgehog.Utils
 import PlutusCore.Normalize
 import PlutusCore.Pretty
+
+import PlutusPrelude
 
 import Control.Lens.TH
 import Control.Monad.Except

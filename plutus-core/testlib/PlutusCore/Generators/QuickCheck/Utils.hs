@@ -7,6 +7,7 @@ import PlutusCore.Default
 import PlutusCore.MkPlc hiding (error)
 import PlutusCore.Name
 import PlutusCore.Pretty
+
 import PlutusIR
 import PlutusIR.Compiler.Datatype
 import PlutusIR.Core.Instance.Pretty.Readable

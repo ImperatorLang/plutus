@@ -11,6 +11,16 @@
 {-# OPTIONS_GHC -Wno-orphans  #-}
 module Lib where
 
+import PlutusCore qualified as PLC
+import PlutusCore.Evaluation.Machine.ExBudgetingDefaults qualified as PLC
+import PlutusCore.Pretty
+import PlutusCore.Test
+
+import PlutusTx.Code
+
+import UntypedPlutusCore qualified as UPLC
+import UntypedPlutusCore.Evaluation.Machine.Cek
+
 import Control.Exception
 import Control.Lens
 import Control.Monad.Except
@@ -18,17 +28,6 @@ import Data.Either.Extras
 import Data.Text (Text)
 import Flat (Flat)
 import Test.Tasty.Extras
-
-import PlutusCore.Test
-
-import PlutusTx.Code
-
-import PlutusCore qualified as PLC
-import PlutusCore.Evaluation.Machine.ExBudgetingDefaults qualified as PLC
-import PlutusCore.Pretty
-
-import UntypedPlutusCore qualified as UPLC
-import UntypedPlutusCore.Evaluation.Machine.Cek
 
 instance (PLC.Closed uni, uni `PLC.Everywhere` Flat, Flat fun) =>
             ToUPlc (CompiledCodeIn uni fun () a) uni fun where

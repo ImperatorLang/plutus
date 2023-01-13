@@ -11,7 +11,6 @@ import PlutusCore.MkPlc
 import PlutusCore.Normalize
 
 import Control.Monad.Morph (hoist)
-
 import Hedgehog
 import Hedgehog.Internal.Property (forAllT)
 import Test.Tasty

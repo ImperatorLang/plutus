@@ -4,12 +4,11 @@
 module Examples where
 
 import AlgTypes
+import Control.Applicative
+import Control.Monad
 import Large
 import Scott
 import Solver
-
-import Control.Applicative
-import Control.Monad
 import System.IO
 import System.Random
 import Test.QuickCheck

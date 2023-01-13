@@ -18,10 +18,10 @@ module PlutusCore.Generators.Hedgehog.AST
     , mangleNames
     ) where
 
-import PlutusPrelude
-
 import PlutusCore
 import PlutusCore.Subst
+
+import PlutusPrelude
 
 import Control.Lens (coerced)
 import Control.Monad.Morph (hoist)

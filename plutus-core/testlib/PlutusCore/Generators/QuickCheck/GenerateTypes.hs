@@ -3,17 +3,17 @@
 
 module PlutusCore.Generators.QuickCheck.GenerateTypes where
 
+import PlutusCore.Builtin
+import PlutusCore.Core
+import PlutusCore.Default
 import PlutusCore.Generators.QuickCheck.Builtin
 import PlutusCore.Generators.QuickCheck.Common
 import PlutusCore.Generators.QuickCheck.GenerateKinds ()
 import PlutusCore.Generators.QuickCheck.GenTm
-
-import PlutusCore.Builtin
-import PlutusCore.Core
-import PlutusCore.Default
 import PlutusCore.Name
 import PlutusCore.Normalize
 import PlutusCore.Quote (runQuote)
+
 import PlutusIR
 import PlutusIR.Core.Instance.Pretty.Readable
 

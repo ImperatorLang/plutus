@@ -5,8 +5,6 @@
 
 module Benchmarks.CryptoAndHashes (makeBenchmarks) where
 
-import Common
-import Generators
 import PlutusCore
 
 import Cardano.Crypto.DSIGN.Class (ContextDSIGN, DSIGNAlgorithm, Signable, deriveVerKeyDSIGN, genKeyDSIGN,
@@ -15,9 +13,10 @@ import Cardano.Crypto.DSIGN.EcdsaSecp256k1 (EcdsaSecp256k1DSIGN, toMessageHash)
 import Cardano.Crypto.DSIGN.Ed25519 (Ed25519DSIGN)
 import Cardano.Crypto.DSIGN.SchnorrSecp256k1 (SchnorrSecp256k1DSIGN)
 import Cardano.Crypto.Seed (mkSeedFromBytes)
-
+import Common
 import Criterion.Main (Benchmark, bgroup)
 import Data.ByteString (ByteString)
+import Generators
 import Hedgehog qualified as H (Seed)
 import System.Random (StdGen)
 

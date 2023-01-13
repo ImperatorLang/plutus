@@ -4,11 +4,12 @@
 
 module Rational.Laws.Other (otherLaws) where
 
+import PlutusTx.Prelude qualified as Plutus
+import PlutusTx.Ratio qualified as Ratio
+
 import Hedgehog (Gen, Property, assert, cover, property, (/==), (===))
 import Hedgehog.Gen qualified as Gen
 import Hedgehog.Range qualified as Range
-import PlutusTx.Prelude qualified as Plutus
-import PlutusTx.Ratio qualified as Ratio
 import Prelude
 import Rational.Laws.Helpers (forAllWithPP, genInteger, genIntegerPos, genRational, testCoverProperty)
 import Test.Tasty (TestTree)

@@ -13,10 +13,6 @@
 -}
 module Main (main) where
 
-import Draw
-import Event
-import Types
-
 import Brick.AttrMap qualified as B
 import Brick.Focus qualified as B
 import Brick.Main qualified as B
@@ -24,9 +20,12 @@ import Brick.Util qualified as B
 import Brick.Widgets.Edit qualified as BE
 import Control.Monad.Extra
 import Data.Text.IO qualified as Text
+import Draw
+import Event
 import Graphics.Vty qualified as Vty
 import Options.Applicative qualified as OA
 import System.Directory.Extra
+import Types
 
 debuggerAttrMap :: B.AttrMap
 debuggerAttrMap =

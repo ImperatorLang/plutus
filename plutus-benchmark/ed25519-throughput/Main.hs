@@ -20,28 +20,27 @@ import PlutusCore (DefaultFun, DefaultUni)
 import PlutusCore.Evaluation.Machine.ExBudget (ExBudget (exBudgetCPU, exBudgetMemory))
 import PlutusCore.Evaluation.Machine.ExBudgetingDefaults qualified as PLC
 import PlutusCore.Evaluation.Machine.ExMemory (ExCPU (..), ExMemory (..))
-import PlutusTx qualified as Tx
-import UntypedPlutusCore qualified as UPLC
-import UntypedPlutusCore.Evaluation.Machine.Cek qualified as Cek
 
+import PlutusTx qualified as Tx
 import PlutusTx.IsData (toData, unstableMakeIsData)
 import PlutusTx.Prelude as Tx hiding (sort, (*))
+
+import UntypedPlutusCore qualified as UPLC
+import UntypedPlutusCore.Evaluation.Machine.Cek qualified as Cek
 
 import Cardano.Crypto.DSIGN.Class (ContextDSIGN, DSIGNAlgorithm, Signable, deriveVerKeyDSIGN, genKeyDSIGN,
                                    rawSerialiseSigDSIGN, rawSerialiseVerKeyDSIGN, signDSIGN)
 import Cardano.Crypto.DSIGN.Ed25519 (Ed25519DSIGN)
 import Cardano.Crypto.Seed (mkSeedFromBytes)
-
 import Data.ByteString (ByteString)
 import Data.ByteString qualified as BS
 import Data.ByteString.Hash qualified as Hash
 import Flat qualified
 import Hedgehog.Internal.Gen qualified as G
 import Hedgehog.Internal.Range qualified as R
+import Prelude (Double, IO, Integral, String, fromIntegral, (*), (/))
 import System.IO.Unsafe (unsafePerformIO)
 import Text.Printf (printf)
-
-import Prelude (Double, IO, Integral, String, fromIntegral, (*), (/))
 
 -- Protocol parameters (November 2022)
 

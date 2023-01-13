@@ -13,11 +13,10 @@ import PlutusCore.Executable.Common
 import PlutusCore.Executable.Parsers
 import PlutusCore.Pretty qualified as PP
 
-import Data.Functor (void)
-import Data.Text.IO qualified as T
-
 import Control.DeepSeq (rnf)
 import Control.Lens ((&), (^.))
+import Data.Functor (void)
+import Data.Text.IO qualified as T
 import Options.Applicative
 import System.Exit (exitSuccess)
 

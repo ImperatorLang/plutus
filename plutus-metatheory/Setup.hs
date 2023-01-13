@@ -1,5 +1,6 @@
 {-# LANGUAGE ImportQualifiedPost #-}
 
+import Data.IORef (IORef, newIORef, readIORef, writeIORef)
 import Distribution.Simple qualified as D
 import Distribution.Simple.PreProcess qualified as D
 import Distribution.Simple.Program qualified as D
@@ -9,8 +10,6 @@ import Distribution.Types.BuildInfo qualified as D
 import Distribution.Types.ComponentLocalBuildInfo qualified as D
 import Distribution.Types.LocalBuildInfo qualified as D
 import Distribution.Verbosity qualified as D
-
-import Data.IORef (IORef, newIORef, readIORef, writeIORef)
 import System.IO.Unsafe (unsafePerformIO)
 
 {-

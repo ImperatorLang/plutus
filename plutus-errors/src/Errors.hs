@@ -4,17 +4,20 @@
 -- | The catalogue of all Plutus errors, obsolete or not.
 module Errors (allErrors) where
 
-import ErrorCode
-import Language.Haskell.TH as TH
-
 import PlutusCore.DeBruijn qualified as PLC
 import PlutusCore.Error qualified as PLC
 import PlutusCore.Evaluation.Machine.Exception qualified as PLC
+
 import PlutusIR.Error qualified as PIR
+
 import PlutusTx.Code qualified as PTX
 import PlutusTx.Compiler.Error qualified as PTX
 import PlutusTx.Lift qualified as PTX
+
 import UntypedPlutusCore.Evaluation.Machine.Cek qualified as PLC
+
+import ErrorCode
+import Language.Haskell.TH as TH
 
 {- | A collection of error instances which are obsolete, together with their error codes bundled to one instance.
 See plutus-errors/README.md

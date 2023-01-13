@@ -5,14 +5,14 @@
 
 module PlutusCore.Parser.Type where
 
-import PlutusPrelude
-
 import PlutusCore.Core.Type
 import PlutusCore.Data
 import PlutusCore.Default
 import PlutusCore.MkPlc (mkIterTyApp)
 import PlutusCore.Name
 import PlutusCore.Parser.ParserCommon
+
+import PlutusPrelude
 
 import Control.Monad
 import Data.ByteString (ByteString)

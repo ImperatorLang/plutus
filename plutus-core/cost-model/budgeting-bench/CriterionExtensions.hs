@@ -12,7 +12,6 @@ import Criterion.Main.Options (MatchType (..), Mode (..), describe, versionInfo)
 import Criterion.Measurement (initializeTime)
 import Criterion.Monad (Criterion, withConfig)
 import Criterion.Types
-
 import Data.List (sort)
 import Data.Time.Clock (getCurrentTime)
 import Options.Applicative (execParser)

@@ -1,7 +1,6 @@
 module Data.MultiSet.Lens (multiSetOf) where
 
 import Control.Lens
-
 import Data.MultiSet
 
 -- | Create a 'MultiSet' from a 'Getter', 'Fold', etc.

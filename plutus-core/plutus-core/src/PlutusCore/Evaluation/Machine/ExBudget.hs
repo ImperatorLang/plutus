@@ -146,6 +146,7 @@ module PlutusCore.Evaluation.Machine.ExBudget
 where
 
 import PlutusCore.Evaluation.Machine.ExMemory
+
 import PlutusPrelude hiding (toList)
 
 import Codec.Serialise (Serialise (..))

@@ -46,11 +46,11 @@ module PlutusCore.MkPlc
     , mkIterKindArrow
     ) where
 
-import PlutusPrelude
-import Prelude hiding (error)
-
 import PlutusCore.Core
 
+import PlutusPrelude
+
+import Prelude hiding (error)
 import Universe
 
 -- | A final encoding for Term, to allow PLC terms to be used transparently as PIR terms.

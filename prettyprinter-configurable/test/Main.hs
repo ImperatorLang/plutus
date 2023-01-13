@@ -3,9 +3,8 @@ module Main where
 import Default
 import Expr
 import NonDefault
-import Universal
-
 import Test.Tasty
+import Universal
 
 main :: IO ()
 main = defaultMain $ testGroup "all"

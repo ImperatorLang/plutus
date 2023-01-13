@@ -14,8 +14,6 @@
 
 module PlutusCore.Default.Builtins where
 
-import PlutusPrelude
-
 import PlutusCore.Builtin
 import PlutusCore.Data
 import PlutusCore.Default.Universe
@@ -24,6 +22,8 @@ import PlutusCore.Evaluation.Machine.ExBudget
 import PlutusCore.Evaluation.Machine.ExMemory
 import PlutusCore.Evaluation.Result
 import PlutusCore.Pretty
+
+import PlutusPrelude
 
 import Codec.Serialise (serialise)
 import Crypto (verifyEcdsaSecp256k1Signature, verifyEd25519Signature_V1, verifyEd25519Signature_V2,

@@ -4,6 +4,15 @@
 {-# LANGUAGE TypeApplications  #-}
 module Main(main) where
 
+import PlutusCore.Data (Data (B, Constr, I, List, Map))
+
+import PlutusTx.Enum (Enum (..))
+import PlutusTx.List (nub, nubBy, partition, sort, sortBy)
+import PlutusTx.Numeric (negate)
+import PlutusTx.Prelude (dropByteString, one, takeByteString)
+import PlutusTx.Ratio (Rational, denominator, numerator, recip, unsafeRatio)
+import PlutusTx.Sqrt (Sqrt (Approximately, Exactly, Imaginary), isqrt, rsqrt)
+
 import Codec.CBOR.FlatTerm qualified as FlatTerm
 import Codec.Serialise (deserialiseOrFail, serialise)
 import Codec.Serialise qualified as Serialise
@@ -14,13 +23,6 @@ import Data.Word (Word64)
 import Hedgehog (MonadGen, Property, PropertyT, annotateShow, assert, forAll, property, tripping)
 import Hedgehog.Gen qualified as Gen
 import Hedgehog.Range qualified as Range
-import PlutusCore.Data (Data (B, Constr, I, List, Map))
-import PlutusTx.Enum (Enum (..))
-import PlutusTx.List (nub, nubBy, partition, sort, sortBy)
-import PlutusTx.Numeric (negate)
-import PlutusTx.Prelude (dropByteString, one, takeByteString)
-import PlutusTx.Ratio (Rational, denominator, numerator, recip, unsafeRatio)
-import PlutusTx.Sqrt (Sqrt (Approximately, Exactly, Imaginary), isqrt, rsqrt)
 import Prelude hiding (Enum (..), Rational, negate, recip)
 import Rational.Laws (lawsTests)
 import Show.Spec qualified

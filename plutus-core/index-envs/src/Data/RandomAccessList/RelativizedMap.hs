@@ -3,11 +3,9 @@
 {-# LANGUAGE UndecidableInstances #-}
 module Data.RandomAccessList.RelativizedMap (RelativizedMap (..))where
 
-import Data.Word
-
-import Data.RandomAccessList.Class qualified as RAL
-
 import Data.IntMap.Strict qualified as IM
+import Data.RandomAccessList.Class qualified as RAL
+import Data.Word
 import GHC.Exts (IsList)
 
 -- | A sequence implemented by a map from "levels" to values and a counter giving the "current" level.

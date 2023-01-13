@@ -13,7 +13,6 @@ import PlutusCore.Name
 
 import Control.Monad.Error.Lens
 import Control.Monad.Except
-
 import Data.Foldable
 
 checkProgram

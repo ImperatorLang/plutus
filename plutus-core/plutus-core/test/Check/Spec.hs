@@ -4,8 +4,6 @@
 {-# LANGUAGE TypeApplications  #-}
 module Check.Spec (tests) where
 
-import PlutusPrelude
-
 import PlutusCore
 import PlutusCore.Check.Normal qualified as Normal
 import PlutusCore.Check.Uniques qualified as Uniques
@@ -13,6 +11,8 @@ import PlutusCore.Check.Value qualified as VR
 import PlutusCore.Generators.Hedgehog
 import PlutusCore.Generators.Hedgehog.AST
 import PlutusCore.MkPlc
+
+import PlutusPrelude
 
 import Control.Monad.Except
 import Data.Either

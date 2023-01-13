@@ -13,8 +13,17 @@
 {-# OPTIONS_GHC -O0 #-}
 module PlutusTx.Plugin (plugin, plc) where
 
-import Data.Bifunctor
+import PlutusCore qualified as PLC
+import PlutusCore.Compiler qualified as PLC
+import PlutusCore.Pretty as PLC
+import PlutusCore.Quote
+
+import PlutusIR qualified as PIR
+import PlutusIR.Compiler qualified as PIR
+import PlutusIR.Compiler.Definitions qualified as PIR
+
 import PlutusPrelude
+
 import PlutusTx.Code
 import PlutusTx.Compiler.Builtins
 import PlutusTx.Compiler.Error
@@ -22,32 +31,13 @@ import PlutusTx.Compiler.Expr
 import PlutusTx.Compiler.Types
 import PlutusTx.Compiler.Utils
 import PlutusTx.Coverage
+import PlutusTx.Options
 import PlutusTx.PIRTypes
 import PlutusTx.PLCTypes
 import PlutusTx.Plugin.Utils
 import PlutusTx.Trace
 
-import GHC.ByteCode.Types qualified as GHC
-import GHC.Core.FamInstEnv qualified as GHC
-import GHC.Core.Opt.OccurAnal qualified as GHC
-import GHC.Core.Unfold qualified as GHC
-import GHC.Plugins qualified as GHC
-import GHC.Types.TyThing qualified as GHC
-import GHC.Utils.Logger qualified as GHC
-
-import PlutusCore qualified as PLC
-import PlutusCore.Compiler qualified as PLC
-import PlutusCore.Pretty as PLC
-import PlutusCore.Quote
-
 import UntypedPlutusCore qualified as UPLC
-
-import PlutusIR qualified as PIR
-import PlutusIR.Compiler qualified as PIR
-import PlutusIR.Compiler.Definitions qualified as PIR
-import PlutusTx.Options
-
-import Language.Haskell.TH.Syntax as TH hiding (lift)
 
 import Control.Exception (throwIO)
 import Control.Lens
@@ -55,14 +45,22 @@ import Control.Monad
 import Control.Monad.Except
 import Control.Monad.Reader
 import Control.Monad.Writer hiding (All)
-import Flat (Flat, flat, unflat)
-
+import Data.Bifunctor
 import Data.ByteString qualified as BS
 import Data.ByteString.Unsafe qualified as BSUnsafe
 import Data.Either.Validation
 import Data.Map qualified as Map
 import Data.Set qualified as Set
 import ErrorCode (HasErrorCode (errorCode))
+import Flat (Flat, flat, unflat)
+import GHC.ByteCode.Types qualified as GHC
+import GHC.Core.FamInstEnv qualified as GHC
+import GHC.Core.Opt.OccurAnal qualified as GHC
+import GHC.Core.Unfold qualified as GHC
+import GHC.Plugins qualified as GHC
+import GHC.Types.TyThing qualified as GHC
+import GHC.Utils.Logger qualified as GHC
+import Language.Haskell.TH.Syntax as TH hiding (lift)
 import Prettyprinter qualified as PP
 import System.IO (openTempFile)
 import System.IO.Unsafe (unsafePerformIO)

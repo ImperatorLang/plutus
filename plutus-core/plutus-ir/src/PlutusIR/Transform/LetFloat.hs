@@ -10,6 +10,7 @@ module PlutusIR.Transform.LetFloat (floatTerm) where
 import PlutusCore qualified as PLC
 import PlutusCore.Builtin qualified as PLC
 import PlutusCore.Name qualified as PLC
+
 import PlutusIR
 import PlutusIR.Purity
 import PlutusIR.Subst

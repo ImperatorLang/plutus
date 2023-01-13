@@ -35,14 +35,14 @@ module PlutusLedgerApi.V1.Interval
     , strictUpperBound
     ) where
 
+import PlutusTx qualified
+import PlutusTx.Lift (makeLift)
+import PlutusTx.Prelude
+
 import Control.DeepSeq (NFData)
 import GHC.Generics (Generic)
 import Prelude qualified as Haskell
 import Prettyprinter (Pretty (pretty), comma, (<+>))
-
-import PlutusTx qualified
-import PlutusTx.Lift (makeLift)
-import PlutusTx.Prelude
 
 {- | An interval of @a@s.
 

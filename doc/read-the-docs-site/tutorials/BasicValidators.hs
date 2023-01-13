@@ -9,9 +9,6 @@
 module BasicValidators where
 
 import PlutusCore.Default qualified as PLC
-import PlutusTx
-import PlutusTx.Lift
-import PlutusTx.Prelude
 
 import PlutusLedgerApi.Common
 import PlutusLedgerApi.V1.Contexts
@@ -19,12 +16,14 @@ import PlutusLedgerApi.V1.Crypto
 import PlutusLedgerApi.V1.Scripts
 import PlutusLedgerApi.V1.Value
 
-import Data.ByteString qualified as BS
-import Data.ByteString.Lazy qualified as BSL
+import PlutusTx
+import PlutusTx.Lift
+import PlutusTx.Prelude
 
 import Codec.Serialise
+import Data.ByteString qualified as BS
+import Data.ByteString.Lazy qualified as BSL
 import Flat qualified
-
 import Prelude (IO, print, show)
 import Prelude qualified as Haskell
 

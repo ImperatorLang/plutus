@@ -3,14 +3,14 @@
 
 module PlutusIR.Generators.QuickCheck.Common where
 
+import PlutusCore.Default
 import PlutusCore.Generators.QuickCheck.Common
 import PlutusCore.Generators.QuickCheck.Substitutions
 import PlutusCore.Generators.QuickCheck.Unification
-
-import PlutusCore.Default
 import PlutusCore.Name
 import PlutusCore.Quote (runQuoteT)
 import PlutusCore.Rename
+
 import PlutusIR
 import PlutusIR.Compiler
 import PlutusIR.Error

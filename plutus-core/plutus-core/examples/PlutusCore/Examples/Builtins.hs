@@ -22,7 +22,6 @@ import PlutusCore.Builtin
 import PlutusCore.Evaluation.Machine.ExBudget
 import PlutusCore.Evaluation.Machine.Exception
 import PlutusCore.Pretty
-
 import PlutusCore.StdLib.Data.ScottList qualified as Plc
 
 import Control.Exception
