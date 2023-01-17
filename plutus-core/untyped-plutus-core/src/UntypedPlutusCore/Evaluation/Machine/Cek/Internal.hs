@@ -85,6 +85,7 @@ import Data.Text (Text)
 import Data.Vector qualified as V
 import Data.Word
 import Data.Word64Array.Word8 hiding (Index, toList)
+import GHC.Magic (inline)
 import Prettyprinter
 import Universe
 
@@ -532,9 +533,9 @@ Morally, this is a stack of frames, but we use the "intrusive list" representati
 we can match on context and the top frame in a single, strict pattern match.
 -}
 data Context uni fun s
-    = FrameApplyFun !(CekValue uni fun) !(Context uni fun s)                         -- ^ @[V _]@
-    | FrameApplyArg !(CekValEnv uni fun) !(Term NamedDeBruijn uni fun ()) !(Context uni fun s) -- ^ @[_ N]@
-    | FrameApplyValues {-# UNPACK #-} !(Args (CekValue uni fun)) !(Context uni fun s) -- ^ @[_ N]@
+    = FrameAwaitFun !(CekValue uni fun) !(Context uni fun s)                         -- ^ @[V _]@
+    | FrameAwaitArg !(CekValEnv uni fun) !(Term NamedDeBruijn uni fun ()) !(Context uni fun s) -- ^ @[_ N]@
+    | FrameAwaitFunMulti {-# UNPACK #-} !(Args (CekValue uni fun)) !(Context uni fun s) -- ^ @[_ N]@
     | FrameForce !(Context uni fun s)                                               -- ^ @(force _)@
     | FrameConstr !(CekValEnv uni fun) {-# UNPACK #-} !Int {-# UNPACK #-} !(ArgQueue.Acc Args (Term NamedDeBruijn uni fun ()) (CekValue uni fun) s) !(Context uni fun s)
     | FrameCases !(CekValEnv uni fun) ![Term NamedDeBruijn uni fun ()] !(Context uni fun s)
@@ -637,10 +638,10 @@ enterComputeCek = computeCek (toWordArray 0) where
         returnCek unbudgetedSteps' ctx (VCon val)
     computeCek !unbudgetedSteps !ctx !env (LamAbs _ name body) = do
         !unbudgetedSteps' <- stepAndMaybeSpend BLamAbs unbudgetedSteps
-        returnCek unbudgetedSteps' ctx (VLamAbs name body env)
+        (inline returnCek) unbudgetedSteps' ctx (VLamAbs name body env)
     computeCek !unbudgetedSteps !ctx !env (Delay _ body) = do
         !unbudgetedSteps' <- stepAndMaybeSpend BDelay unbudgetedSteps
-        returnCek unbudgetedSteps' ctx (VDelay body env)
+        (inline returnCek) unbudgetedSteps' ctx (VDelay body env)
     -- s ; ρ ▻ lam x L  ↦  s ◅ lam x (L , ρ)
     computeCek !unbudgetedSteps !ctx !env (Force _ body) = do
         !unbudgetedSteps' <- stepAndMaybeSpend BForce unbudgetedSteps
@@ -648,7 +649,7 @@ enterComputeCek = computeCek (toWordArray 0) where
     -- s ; ρ ▻ [L M]  ↦  s , [_ (M,ρ)]  ; ρ ▻ L
     computeCek !unbudgetedSteps !ctx !env (Apply _ fun arg) = do
         !unbudgetedSteps' <- stepAndMaybeSpend BApply unbudgetedSteps
-        computeCek unbudgetedSteps' (FrameApplyArg env arg ctx) env fun
+        computeCek unbudgetedSteps' (FrameAwaitArg env fun ctx) env arg
     -- s ; ρ ▻ abs α L  ↦  s ◅ abs α (L , ρ)
     -- s ; ρ ▻ con c  ↦  s ◅ con c
     -- s ; ρ ▻ builtin bn  ↦  s ◅ builtin bn arity arity [] [] ρ
@@ -692,11 +693,11 @@ enterComputeCek = computeCek (toWordArray 0) where
     -- s , {_ A} ◅ abs α M  ↦  s ; ρ ▻ M [ α / A ]*
     returnCek !unbudgetedSteps (FrameForce ctx) fun = forceEvaluate unbudgetedSteps ctx fun
     -- s , [_ (M,ρ)] ◅ V  ↦  s , [V _] ; ρ ▻ M
-    returnCek !unbudgetedSteps (FrameApplyArg argVarEnv arg ctx) fun =
-        computeCek unbudgetedSteps (FrameApplyFun fun ctx) argVarEnv arg
+    returnCek !unbudgetedSteps (FrameAwaitArg funVarEnv fun ctx) arg =
+        computeCek unbudgetedSteps (FrameAwaitFun arg ctx) funVarEnv fun
     -- s , [(lam x (M,ρ)) _] ◅ V  ↦  s ; ρ [ x  ↦  V ] ▻ M
     -- FIXME: add rule for VBuiltin once it's in the specification.
-    returnCek !unbudgetedSteps (FrameApplyFun fun ctx) arg =
+    returnCek !unbudgetedSteps (FrameAwaitFun arg ctx) fun =
         applyEvaluate unbudgetedSteps ctx fun arg
     returnCek !unbudgetedSteps (FrameConstr env i acc ctx) e = do
         r <- CekM $ ArgQueue.stepAcc acc e
@@ -705,11 +706,11 @@ enterComputeCek = computeCek (toWordArray 0) where
             Left done          -> returnCek unbudgetedSteps ctx $ VConstr i done
     returnCek !unbudgetedSteps (FrameCases env cs ctx) e = case e of
         (VConstr i args) -> case cs ^? ix i of
-            Just t  -> computeCek unbudgetedSteps (FrameApplyValues args ctx) env t
+            Just t  -> computeCek unbudgetedSteps (FrameAwaitFunMulti args ctx) env t
             Nothing -> throwingDischarged _MachineError (MissingCaseBranch i) e
         _ -> throwingDischarged _MachineError NonConstrScrutinized e
-    returnCek !unbudgetedSteps (FrameApplyValues args ctx) fun = case ArgQueue.uncons args of
-        Just (arg, rest) -> applyEvaluate unbudgetedSteps (FrameApplyValues rest ctx) fun arg
+    returnCek !unbudgetedSteps (FrameAwaitFunMulti args ctx) fun = case ArgQueue.uncons args of
+        Just (arg, rest) -> applyEvaluate unbudgetedSteps (FrameAwaitFunMulti rest ctx) fun arg
         Nothing          -> returnCek unbudgetedSteps ctx fun
 
     -- | @force@ a term and proceed.
