@@ -3,6 +3,7 @@
 {-# LANGUAGE GADTs            #-}
 {-# LANGUAGE LambdaCase       #-}
 {-# LANGUAGE TypeFamilies     #-}
+{-# LANGUAGE ViewPatterns     #-}
 
 {-|
 Call site inlining machinery. For now there's only one part: inlining of fully applied functions.
@@ -197,6 +198,10 @@ processTerm = handleTerm <=< traverseOf termSubtypes applyTypeSubstitution where
             Nothing  -> considerInline v
             -- otherwise, inline it.
             Just sub -> pure sub
+        (extractApps -> Just (bs, t)) -> do
+            bs' <- wither (processSingleBinding t) bs
+            t' <- processTerm t
+            pure $ restoreApps bs' t'
         Let a NonRec bs t -> do
             -- Process bindings, checking for fully applied functions and
             -- put them in the substitution. We do NOT remove the inlined binding here because it
@@ -268,30 +273,43 @@ Some examples will help:
 -}
 extractApps ::
   Term tyname name uni fun a
-  -> Maybe ([TermDef (Term tyname name uni fun) tyname name uni a], Term tyname name uni fun a)
+  -> Maybe ([Binding tyname name uni fun a], Term tyname name uni fun a)
 extractApps = collectArgs []
   where
       collectArgs ::  [Term tyname name uni fun a]
         -> Term tyname name uni fun a
         -> Maybe
-            ([TermDef (Term tyname name uni fun) tyname name uni a], Term tyname name uni fun a)
+            ([Binding tyname name uni fun a], Term tyname name uni fun a)
       collectArgs argStack (Apply _ f arg) = collectArgs (arg:argStack) f
       collectArgs argStack t               = matchArgs argStack [] t
+      matchArgs :: [Term tyname name uni fun a]
+                   -> [Binding tyname name uni fun a]
+                   -> Term tyname name uni fun a
+                   -> Maybe
+                        ([Binding tyname name uni fun a], Term tyname name uni fun a)
       matchArgs (arg:rest) acc (LamAbs a n ty body) =
-        matchArgs rest (Def (VarDecl a n ty) arg:acc) body
+        -- variables are non-strict by default
+        matchArgs rest (TermBind a NonStrict (VarDecl a n ty) arg:acc) body
       matchArgs []         acc t                 =
         if null acc then Nothing else Just (reverse acc, t)
       matchArgs (_:_)      _   _                 = Nothing
 
 -- | The inverse of 'extractApps'.
 restoreApps ::
-  [TermDef (Term tyname name uni fun) tyname name uni a]
+  [Binding tyname name uni fun a]
   -> Term tyname name uni fun a
   -> Term tyname name uni fun a
 restoreApps defs t = makeLams [] t (reverse defs)
   where
-      makeLams args acc (Def (VarDecl a n ty) rhs:rest) =
+      makeLams :: [Term tyname name uni fun a]
+        -> Term tyname name uni fun a
+        -> [Binding tyname name uni fun a]
+        -> Term tyname name uni fun a
+      makeLams args acc (TermBind a NonStrict (VarDecl _a n ty) rhs:rest) =
         makeLams (rhs:args) (LamAbs a n ty acc) rest
+      -- makeLams args acc (TypeBind a (TyDecl tyn _ kinda) rhs:rest) =
+      --   makeLams
+      -- makeLams args acc (DataBind a (VarDecl _a n ty) rhs:rest) =
       makeLams args acc []                            = makeApps args acc
       -- This isn't the best annotation, but it will do
       makeApps (arg:args) acc = makeApps args (Apply (termAnn acc) acc arg)
